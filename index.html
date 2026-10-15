@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UPI Guard – AI Fraud Prevention</title>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#1e293b;--mut:#64748b;--line:#e2e8f0;--pri:#4f46e5;--pri2:#eef2ff;--ok:#059669;--okb:#d1fae5;--warn:#b45309;--warnb:#fef3c7;--bad:#dc2626;--badb:#fee2e2}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#fff;border-bottom:1px solid var(--line);padding:12px 28px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:5}
+.logo{font-weight:800;font-size:18px;display:flex;gap:8px;align-items:center}.logo i{background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-style:normal}
+nav{display:flex;gap:6px}nav button{border:0;background:none;padding:8px 16px;border-radius:9px;font-weight:600;color:var(--mut);cursor:pointer}nav button.on{background:var(--pri2);color:var(--pri)}
+#ai{margin-left:auto;font-size:12px;padding:4px 10px;border-radius:99px;background:var(--warnb);color:var(--warn);font-weight:600}#ai.on{background:var(--okb);color:var(--ok)}
+main{max-width:1280px;margin:22px auto;padding:0 20px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+h3{margin:0 0 12px;font-size:15px}.sub{color:var(--mut);font-size:12px}.grid{display:grid;gap:18px}.g3{grid-template-columns:260px 360px 1fr}.g2{grid-template-columns:1fr 1fr}.kp{grid-template-columns:repeat(5,1fr)}
+@media(max-width:1000px){.g3,.g2,.kp{grid-template-columns:1fr}}
+.sc{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 12px;margin-bottom:8px;cursor:pointer}.sc:hover{border-color:var(--pri);background:var(--pri2)}.sc b{display:block;font-size:13px}.sc span{font-size:12px;color:var(--mut)}
+.phone{width:340px;height:660px;border:9px solid #dbe3f0;border-radius:40px;background:#fff;position:relative;overflow:hidden;margin:auto;box-shadow:0 18px 40px rgba(79,70,229,.12)}
+.ph{background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;padding:22px 20px 16px}.ph small{opacity:.85}.pb{padding:14px 18px;height:500px;overflow:auto}
+label{display:block;font-size:11px;font-weight:600;color:var(--mut);margin:9px 0 3px;text-transform:uppercase;letter-spacing:.3px}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#f8fafc}input:focus,select:focus,textarea:focus{outline:2px solid #c7d2fe;background:#fff}
+.chk{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13px}.chk input{width:auto}
+.btn{border:0;border-radius:11px;padding:11px 16px;font-weight:700;cursor:pointer;font-size:14px;width:100%}.pri{background:var(--pri);color:#fff}.pri:hover{background:#4338ca}.gh{background:#f1f5f9;color:var(--ink)}.dg{background:var(--bad);color:#fff}
+.ov{position:absolute;inset:0;background:#fff;z-index:3;display:none;flex-direction:column;overflow:auto}.ov.show{display:flex}
+.bn{padding:26px 20px 18px;color:#fff;font-weight:700}.bn.BLOCK{background:linear-gradient(135deg,#ef4444,#f97316)}.bn.WARN{background:linear-gradient(135deg,#f59e0b,#f97316)}.bn.ALLOW{background:linear-gradient(135deg,#10b981,#06b6d4)}
+.ob{padding:16px 20px;flex:1}.hl{font-size:19px;font-weight:800;line-height:1.25;margin-bottom:10px}.meter{height:9px;background:#e2e8f0;border-radius:9px;overflow:hidden;margin:6px 0 12px}.meter i{display:block;height:100%}
+.rs{list-style:none;padding:0;margin:8px 0}.rs li{padding:7px 10px;border-radius:9px;margin-bottom:6px;font-size:12.5px;background:#f8fafc;border-left:4px solid #94a3b8}.rs li.high{background:var(--badb);border-color:var(--bad)}.rs li.medium{background:var(--warnb);border-color:#f59e0b}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700}.chip.BLOCK{background:var(--badb);color:var(--bad)}.chip.WARN{background:var(--warnb);color:var(--warn)}.chip.ALLOW{background:var(--okb);color:var(--ok)}.chip.n{background:var(--pri2);color:var(--pri)}
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12.5px}.bar .l{width:46%}.bar .t{flex:1;background:#eef2f7;border-radius:6px;height:12px;overflow:hidden}.bar .t i{display:block;height:100%;background:linear-gradient(90deg,#818cf8,#6366f1);border-radius:6px}.bar .v{width:40px;text-align:right;color:var(--mut)}
+.kpi b{display:block;font-size:26px;letter-spacing:-.5px}.kpi span{color:var(--mut);font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th{text-align:left;color:var(--mut);font-weight:600;padding:8px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase}td{padding:8px;border-bottom:1px solid #f1f5f9;vertical-align:top}tr.r{cursor:pointer}tr.r:hover{background:#f8fafc}
+.tr{display:flex;align-items:flex-end;gap:10px;height:130px}.tr div{flex:1;text-align:center;font-size:10px;color:var(--mut)}.tr .c{height:100px;display:flex;align-items:flex-end;justify-content:center;gap:3px}.tr .c i{width:42%;border-radius:5px 5px 0 0;display:block}
+.sm{padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:11px;cursor:pointer;font-weight:600}.sm.f:hover{background:var(--badb)}.sm.l:hover{background:var(--okb)}
+.mt{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center}.mt div{background:#f8fafc;border-radius:11px;padding:10px}.mt b{font-size:20px;display:block}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 18px;border-radius:99px;display:none;z-index:9}
+</style></head><body>
+<header><div class="logo"><i>🛡</i>UPI Guard</div><nav><button id="n1" class="on" onclick="tab(1)">Payment App</button><button id="n2" onclick="tab(2)">Analyst Dashboard</button></nav><span id="ai">AI…</span></header>
+<main>
+<section id="v1"><div class="grid g3">
+ <div class="card"><h3>Demo scenarios</h3><div id="sc"></div><p class="sub">Click one to fill the payment form, then press “Check &amp; Pay”.</p></div>
+ <div><div class="phone"><div class="ph"><small>Pay via UPI</small><div style="font-size:20px;font-weight:700">Confirm payment</div></div>
+  <div class="pb"><label>Payment type</label><select id="mode"><option value="pay">Send money</option><option value="qr">Scanned QR</option><option value="link">Payment link</option><option value="collect">Collect request</option></select>
+  <label>Payee UPI ID</label><input id="vpa"><label>Name registered with bank</label><input id="reg"><label>Name shown on QR / link / request</label><input id="disp">
+  <label>Amount (₹)</label><input id="amt" type="number"><label>Message / SMS that led here</label><textarea id="msg" rows="3"></textarea>
+  <div class="chk"><input type="checkbox" id="ss"><span>Screen-sharing is active</span></div><div class="chk"><input type="checkbox" id="ra"><span>Remote-access app (AnyDesk/TeamViewer) installed</span></div></div>
+  <div style="padding:0 18px"><button class="btn pri" onclick="analyze()" id="go">Check &amp; Pay</button></div>
+  <div class="ov" id="ov"></div></div></div>
+ <div class="card" id="ex"><h3>Why this decision?</h3><p class="sub">Run a scenario to see the model’s explanation: feature contributions, rule indicators and Grok’s reasoning.</p></div>
+</div></section>
+<section id="v2" hidden><div class="grid">
+ <div class="grid kp" id="kpi"></div>
+ <div class="grid g2"><div class="card"><h3>Flagged by fraud category</h3><div id="cats"></div></div><div class="card"><h3>Daily trend <span class="sub">(<span style="color:#818cf8">■</span> total <span style="color:#f87171">■</span> flagged)</span></h3><div class="tr" id="trend"></div></div></div>
+ <div class="grid g2"><div class="card"><h3>Model performance <span class="sub">held-out labelled test set</span></h3><div id="met"></div><button class="sm" style="margin-top:12px" onclick="retrain()">↻ Retrain with analyst feedback</button></div>
+  <div class="card"><h3>Adaptivity: newly discovered patterns</h3><div id="pat"></div></div></div>
+ <div class="card"><div style="display:flex;justify-content:space-between"><h3>Transactions</h3><select id="flt" style="width:auto" onchange="loadT()"><option value="1">Flagged only</option><option value="0">All</option></select></div><div style="overflow:auto"><table><thead><tr><th>Time</th><th>Payee</th><th>Amount</th><th>Type</th><th>Category</th><th>Risk</th><th>Decision</th><th>User</th><th>Analyst label</th></tr></thead><tbody id="tb"></tbody></table></div></div>
+</div></section></main><div id="toast"></div>
+<script>
+const $=id=>document.getElementById(id),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),pc=x=>Math.round(x*100)+'%',inr=x=>'₹'+Math.round(x).toLocaleString('en-IN');
+const col=d=>d=='BLOCK'?'#ef4444':d=='WARN'?'#f59e0b':'#10b981';
+const API=async(p,o)=>{const r=await fetch('/api/'+p,o&&{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)});return r.json()};
+const toast=t=>{$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)};
+const S=[
+{n:'Refund collect request',d:'“Refund” that debits you',m:'collect',v:'refund.help4u@ybl',r:'Refund Desk',p:'Refund Desk',a:5000,t:'Your order refund of ₹5000 is ready. Approve the request and enter UPI PIN to receive the money.'},
+{n:'QR code swapped',d:'Shop QR pays someone else',m:'qr',v:'quickcash.9921@axl',r:'Rajesh Kumar',p:'Sharma Sweets',a:1850,t:''},
+{n:'Remote-access scam',d:'“Bank officer” on AnyDesk',m:'pay',v:'quickcash.9921@axl',r:'Rajesh Kumar',p:'Rajesh Kumar',a:49000,t:'Bank executive asked me to install AnyDesk and share screen to fix my card issue',ss:1,ra:1},
+{n:'Fake KYC alert',d:'Phishing SMS + ₹10 fee',m:'link',v:'bsnl-kyc.update@upi',r:'KYC Update Svc',p:'SBI KYC',a:10,t:'SBI ALERT: Your KYC expires today. Account will be blocked. Update immediately, pay ₹10 verification fee.'},
+{n:'Mule account / fake job',d:'Task-job deposit',m:'pay',v:'easyearn.task77@ibl',r:'Easy Earn Tasks',p:'Easy Earn Tasks',a:12000,t:'Work-from-home job: pay refundable deposit to start earning ₹5000/day'},
+{n:'Unseen pattern (new)',d:'Fake electricity disconnection',m:'link',v:'elec-bill.pay@okaxis',r:'Bill Desk Services',p:'State Electricity Board',a:2300,t:'FINAL NOTICE: Your electricity will be disconnected tonight 9:30 PM due to unpaid bill. Call officer and pay via this link now.'},
+{n:'Legitimate payment',d:'Known kirana store',m:'pay',v:'ramesh.kirana@oksbi',r:'Ramesh Kirana Store',p:'Ramesh Kirana Store',a:420,t:'Groceries'}];
+$('sc').innerHTML=S.map((s,i)=>`<button class="sc" onclick="fill(${i})"><b>${s.n}</b><span>${s.d}</span></button>`).join('');
+function fill(i){const s=S[i];$('mode').value=s.m;$('vpa').value=s.v;$('reg').value=s.r;$('disp').value=s.p;$('amt').value=s.a;$('msg').value=s.t;$('ss').checked=!!s.ss;$('ra').checked=!!s.ra;$('ov').classList.remove('show')}
+function tab(n){[1,2].forEach(i=>{$('v'+i).hidden=i!=n;$('n'+i).classList.toggle('on',i==n)});if(n==2)dash()}
+async function analyze(){const b=$('go');b.textContent='Analysing…';
+ const r=await API('analyze',{mode:$('mode').value,payee_vpa:$('vpa').value,registered_name:$('reg').value,display_name:$('disp').value,amount:$('amt').value,message:$('msg').value,screenshare:$('ss').checked,remote_app:$('ra').checked});
+ b.textContent='Check & Pay';if(r.error)return toast(r.error);
+ const T={BLOCK:'⛔ High risk – payment paused',WARN:'⚠️ Warning – please double-check',ALLOW:'✅ Looks safe'}[r.decision];
+ $('ov').innerHTML=`<div class="bn ${r.decision}">${T}</div><div class="ob"><div class="hl">${E(r.headline)}</div><div class="sub">Risk score ${pc(r.risk)}</div><div class="meter"><i style="width:${pc(r.risk)};background:${col(r.decision)}"></i></div>
+ <p>${E(r.warning)}</p><ul class="rs">${r.indicators.slice(0,4).map(i=>`<li class="${i.severity}">${E(i.text)}</li>`).join('')}</ul></div>
+ <div style="padding:0 20px 22px">${r.decision=='ALLOW'?`<button class="btn pri" onclick="act(${r.id},'paid')">Pay ${inr($('amt').value)}</button><br><br><button class="btn gh" onclick="act(${r.id},'cancelled')">Back</button>`:`<button class="btn pri" onclick="act(${r.id},'cancelled')">Cancel payment (recommended)</button><br><br><button class="btn gh" onclick="act(${r.id},'paid')">I understand the risk – pay anyway</button>`}</div>`;
+ $('ov').classList.add('show');
+ $('ex').innerHTML=`<h3>Why this decision?</h3><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><span class="chip ${r.decision}">${r.decision}</span><span class="chip n">${E(r.category_label)}</span><span class="chip n">ML risk ${pc(r.model_risk)}</span>${r.ai_confidence!=null?`<span class="chip n">Grok confidence ${pc(r.ai_confidence)}</span>`:''}</div>
+ <p><b>AI explanation</b><br>${E(r.explanation)}</p>${r.ai_used?'':`<p class="sub">⚠ Grok not used: ${E(r.ai_error||'')}</p>`}
+ ${r.new_pattern?`<p class="chip WARN">🆕 New pattern “${E(r.new_pattern)}” sent to analysts for review</p>`:''}
+ <h3 style="margin-top:14px">Top model drivers</h3>${r.contributions.length?r.contributions.map(c=>`<div class="bar"><span class="l">${E(c.label)}</span><span class="t"><i style="width:${Math.min(100,c.impact*250)}%"></i></span><span class="v">+${pc(c.impact)}</span></div>`).join(''):'<p class="sub">No feature raised risk above baseline.</p>'}
+ <h3 style="margin-top:14px">Rule indicators</h3><ul class="rs">${r.indicators.map(i=>`<li class="${i.severity}">${E(i.text)}</li>`).join('')||'<li>None</li>'}</ul>`}
+async function act(id,a){await API('txn/'+id+'/action',{action:a});$('ov').classList.remove('show');toast(a=='paid'?'Payment sent (demo)':'Payment cancelled – you stayed safe')}
+async function dash(){const [s,m]=await Promise.all([API('stats'),fetch('/api/metrics').then(r=>r.json())]);
+ $('ai').textContent=s.ai_enabled?'Grok AI: '+s.ai_model:'Grok AI: off (no key)';$('ai').className=s.ai_enabled?'on':'';
+ $('kpi').innerHTML=[['Transactions',s.total],['Flagged',s.flagged],['Blocked',s.blocked],['Value at risk',inr(s.value_at_risk)],['New patterns pending',s.pending_patterns]].map(k=>`<div class="card kpi"><b>${k[1]}</b><span>${k[0]}</span></div>`).join('');
+ const mx=Math.max(1,...s.categories.map(c=>c.n));$('cats').innerHTML=s.categories.map(c=>`<div class="bar"><span class="l">${E(c.label)}</span><span class="t"><i style="width:${c.n/mx*100}%"></i></span><span class="v">${c.n}</span></div>`).join('')||'<p class="sub">No flagged transactions</p>';
+ const tm=Math.max(1,...s.trend.map(t=>t.total));$('trend').innerHTML=s.trend.map(t=>`<div><div class="c"><i style="height:${t.total/tm*100}%;background:#a5b4fc"></i><i style="height:${(t.flagged||0)/tm*100}%;background:#f87171"></i></div>${t.day.slice(5)}</div>`).join('');
+ const a=m.model,b=m.static_rule_baseline,f=x=>(x*100).toFixed(1)+'%';
+ $('met').innerHTML=`<div class="mt"><div><b style="color:var(--ok)">${f(a.precision)}</b>Precision</div><div><b style="color:var(--pri)">${f(a.recall)}</b>Recall</div><div><b style="color:var(--bad)">${f(a.fpr)}</b>False-positive rate</div><div><b>${f(a.accuracy)}</b>Accuracy</div></div>
+ <p class="sub" style="margin-top:10px">Test set: ${m.test_size} txns (${m.fraud_in_test} fraud). Static-rule baseline: precision ${f(b.precision)}, recall ${f(b.recall)}, FPR ${f(b.fpr)}. Confusion: TP ${a.tp} · FP ${a.fp} · FN ${a.fn} · TN ${a.tn}. Analyst feedback samples used: ${m.feedback_samples}.</p>`;
+ const p=await API('patterns');$('pat').innerHTML=p.map(x=>`<div style="padding:10px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px"><b>${E(x.name)}</b> <span class="chip ${x.status=='approved'?'ALLOW':x.status=='pending'?'WARN':'n'}">${x.status}</span> <span class="sub">hits: ${x.hits}</span><div class="sub">${E(x.description)}</div><div class="sub">keywords: ${x.keywords.map(E).join(', ')}</div>${x.status=='pending'?`<button class="sm l" onclick="pset(${x.id},'approved')">Approve &amp; deploy</button> <button class="sm f" onclick="pset(${x.id},'rejected')">Reject</button>`:''}</div>`).join('')||'<p class="sub">Nothing yet. Run the “Unseen pattern” scenario with a Grok key set: Grok flags it as novel and it appears here for approval. Once approved, repeats are caught instantly.</p>';
+ loadT()}
+async function loadT(){const t=await fetch('/api/transactions?flagged='+$('flt').value).then(r=>r.json());
+ $('tb').innerHTML=t.map(x=>`<tr class="r" onclick="$('d${x.id}').hidden=!$('d${x.id}').hidden"><td>${x.ts.replace('T',' ').slice(5,16)}</td><td>${E(x.payee_vpa)}</td><td>${inr(x.amount)}</td><td>${x.mode}</td><td>${E(x.category_label)}</td><td>${pc(x.risk||0)}</td><td><span class="chip ${x.decision}">${x.decision}</span></td><td>${x.user_action||'–'}</td><td onclick="event.stopPropagation()">${x.analyst_label?`<b>${x.analyst_label}</b>`:`<button class="sm f" onclick="lab(${x.id},'fraud')">Fraud</button> <button class="sm l" onclick="lab(${x.id},'legit')">Legit</button>`}</td></tr>
+ <tr id="d${x.id}" hidden><td colspan="9" style="background:#f8fafc"><b>Why:</b> ${E(x.ai.explanation||'')}<ul class="rs">${x.reasons.map(i=>`<li class="${i.severity}">${E(i.text)}</li>`).join('')}</ul>${x.message?`<div class="sub">Message: ${E(x.message)}</div>`:''}</td></tr>`).join('')}
+async function lab(id,l){await API('txn/'+id+'/label',{label:l});toast('Label saved – retrain to learn from it');loadT()}
+async function pset(id,s){await API('patterns/'+id,{status:s});toast('Pattern '+s);dash()}
+async function retrain(){toast('Retraining…');await API('retrain',{});toast('Model retrained');dash()}
+fill(0);fetch('/api/stats').then(r=>r.json()).then(s=>{$('ai').textContent=s.ai_enabled?'Grok AI: '+s.ai_model:'Grok AI: off (no key)';$('ai').className=s.ai_enabled?'on':''});
+</script></body></html>
